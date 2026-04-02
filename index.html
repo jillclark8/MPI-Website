@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MPI — A Sunland Company | Built for Colorado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Mulish:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --co-sky:#2B4FA0;
+  --co-gold:#D4A017;
+  --co-amber:#E8B84B;
+  --slate:#1A1A2E;
+  --charcoal:#111118;
+  --warm:#F7F3EC;
+  --stone:#C8BFB0;
+  --fog:#8A8A8A;
+  --white:#FFFFFF;
+  --rust:#8B3A2A;
+}
+html{scroll-behavior:smooth}
+body{background:var(--charcoal);color:var(--warm);font-family:'Mulish',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* ── GRAIN OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9000;opacity:0.35;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5vw;height:80px;
+  transition:background 0.5s,border-color 0.5s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{background:rgba(17,17,24,0.96);backdrop-filter:blur(20px);border-color:rgba(212,160,23,0.15)}
+.nav-logo img{height:48px;width:auto}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{
+  font-family:'Mulish',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:rgba(247,243,236,0.65);text-decoration:none;
+  transition:color 0.25s;
+}
+.nav-links a:hover{color:var(--co-amber)}
+.nav-cta{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:0.95rem;letter-spacing:0.12em;
+  color:var(--charcoal);background:var(--co-amber);
+  border:none;cursor:pointer;padding:0.6rem 1.8rem;
+  transition:background 0.2s,transform 0.15s;
+}
+.nav-cta:hover{background:var(--co-gold);transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{
+  position:relative;width:100%;height:100vh;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right, rgba(17,17,24,0.88) 0%, rgba(17,17,24,0.5) 60%, rgba(17,17,24,0.1) 100%),
+    linear-gradient(to top, rgba(17,17,24,1) 0%, transparent 35%);
+}
+/* Colorado mountain silhouette SVG overlay */
+.hero-mountains{
+  position:absolute;bottom:0;left:0;right:0;
+  height:220px;pointer-events:none;
+  background:linear-gradient(to top,var(--charcoal) 30%,transparent 100%);
+}
+.hero-mountains svg{
+  position:absolute;bottom:0;left:0;right:0;
+  width:100%;height:220px;
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 8vw;
+  max-width:800px;
+}
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:1rem;
+  font-family:'Mulish',sans-serif;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--co-amber);margin-bottom:1.5rem;
+  opacity:0;animation:fadeUp 0.8s 0.2s forwards;
+}
+.hero-kicker::before{content:'';width:24px;height:1px;background:var(--co-amber)}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,10vw,9rem);
+  line-height:0.88;letter-spacing:0.03em;
+  color:var(--white);
+  margin-bottom:1.2rem;
+  opacity:0;animation:fadeUp 1s 0.3s forwards;
+}
+.hero h1 .line-co{
+  display:block;
+  -webkit-text-stroke:2px var(--white);
+  color:transparent;
+}
+.hero h1 .line-gold{
+  display:block;color:var(--co-amber);
+  font-size:clamp(2rem,5vw,4.5rem);
+  letter-spacing:0.08em;
+}
+.hero-sub{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1rem,1.5vw,1.15rem);
+  font-style:italic;font-weight:400;
+  line-height:1.75;color:var(--stone);
+  max-width:480px;margin-bottom:2.5rem;
+  opacity:0;animation:fadeUp 1s 0.45s forwards;
+}
+.hero-btns{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 1s 0.6s forwards;
+}
+.btn-amber{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;letter-spacing:0.1em;
+  color:var(--charcoal);background:var(--co-amber);
+  border:none;cursor:pointer;padding:0.85rem 2.5rem;
+  transition:background 0.2s,transform 0.15s;
+  text-decoration:none;display:inline-block;
+}
+.btn-amber:hover{background:var(--co-gold);transform:translateY(-2px)}
+.btn-wire{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;letter-spacing:0.1em;
+  color:var(--warm);
+  background:transparent;
+  border:1px solid rgba(247,243,236,0.3);
+  cursor:pointer;padding:0.85rem 2.5rem;
+  transition:border-color 0.2s,color 0.2s;
+  text-decoration:none;display:inline-block;
+}
+.btn-wire:hover{border-color:var(--co-amber);color:var(--co-amber)}
+.hero-tel{
+  position:absolute;right:8vw;bottom:100px;z-index:2;
+  text-align:right;
+  opacity:0;animation:fadeIn 1s 1s forwards;
+}
+.hero-tel span{font-family:'Mulish',sans-serif;font-size:0.58rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--co-amber);display:block;margin-bottom:4px}
+.hero-tel a{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.06em;color:var(--white);text-decoration:none;transition:color 0.2s}
+.hero-tel a:hover{color:var(--co-amber)}
+
+/* ── PHOTO STRIP ── */
+.photo-strip{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  height:180px;gap:2px;
+  border-top:2px solid var(--co-amber);
+  border-bottom:2px solid var(--co-amber);
+}
+.strip-img{
+  overflow:hidden;position:relative;
+  background:var(--slate);
+}
+.strip-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(20%) contrast(1.05);
+  transition:transform 0.6s ease,filter 0.4s;
+}
+.strip-img:hover img{transform:scale(1.08);filter:grayscale(0%) contrast(1.1)}
+.strip-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,rgba(17,17,24,0.5) 100%);
+}
+
+/* ── STAT BAR ── */
+.stat-bar{
+  background:var(--co-sky);
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.stat-cell{
+  padding:2rem 1.5rem;
+  border-right:1px solid rgba(255,255,255,0.1);
+  text-align:center;
+  position:relative;
+}
+.stat-cell:last-child{border-right:none}
+.stat-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.8rem;letter-spacing:0.04em;
+  color:var(--co-amber);display:block;line-height:1;
+}
+.stat-l{
+  font-family:'Mulish',sans-serif;font-size:0.62rem;font-weight:600;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.7);margin-top:5px;display:block;
+}
+
+/* ── SECTIONS ── */
+section{padding:7rem 8vw}
+.label{
+  font-family:'Mulish',sans-serif;font-size:0.6rem;font-weight:600;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--co-amber);margin-bottom:1rem;display:block;
+}
+h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  letter-spacing:0.04em;line-height:0.95;
+  color:var(--white);
+}
+
+/* ── ABOUT ── */
+.about{
+  background:var(--charcoal);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+  position:relative;overflow:hidden;
+}
+.about-body p{
+  font-family:'Playfair Display',serif;
+  font-size:1.05rem;font-style:italic;
+  line-height:1.9;color:var(--stone);
+  margin-top:1.5rem;
+}
+.about-body p+p{margin-top:1rem;font-style:normal;font-size:0.92rem;font-family:'Mulish',sans-serif;color:var(--fog)}
+.sunland-callout{
+  margin-top:2rem;
+  padding:1.8rem;
+  background:var(--co-sky);
+  position:relative;
+}
+.sunland-callout::before{
+  content:'';position:absolute;top:0;left:0;
+  width:4px;height:100%;background:var(--co-amber);
+}
+.sunland-callout h4{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:0.1em;
+  color:var(--co-amber);margin-bottom:0.6rem;
+}
+.sunland-callout p{
+  font-family:'Mulish',sans-serif;font-size:0.83rem;font-weight:300;
+  line-height:1.7;color:rgba(247,243,236,0.8);
+  margin:0!important;font-style:normal!important;
+}
+.about-img-wrap{position:relative}
+.about-big-img{
+  width:100%;aspect-ratio:4/5;overflow:hidden;
+  position:relative;
+}
+.about-big-img img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05)}
+.about-big-img::after{
+  content:'Excellence Since 1975';
+  position:absolute;bottom:0;left:0;right:0;
+  padding:2rem 1.5rem 1.5rem;
+  background:linear-gradient(to top,rgba(17,17,24,0.95),transparent);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:0.18em;
+  color:var(--co-amber);
+  text-align:center;
+}
+.about-badge{
+  position:absolute;top:-1.5rem;right:-1.5rem;
+  width:120px;height:120px;
+  background:var(--co-amber);
+  border-radius:50%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  border:4px solid var(--charcoal);
+  z-index:2;
+}
+.about-badge .bn{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--charcoal);line-height:1}
+.about-badge .bl{font-family:'Mulish',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(17,17,24,0.65);text-align:center;line-height:1.3;margin-top:2px}
+
+/* ── PARALLAX PHOTO SECTION ── */
+.parallax-section{
+  position:relative;height:500px;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.parallax-bg{
+  position:absolute;inset:-20%;
+  background-size:cover;background-position:center;
+  background-attachment:fixed;
+  filter:brightness(0.4) contrast(1.1);
+}
+.parallax-content{
+  position:relative;z-index:2;
+  text-align:center;padding:0 10vw;
+}
+.parallax-content h2{font-size:clamp(2rem,5vw,5rem);letter-spacing:0.06em}
+.parallax-content p{
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem;font-style:italic;
+  color:var(--stone);margin-top:1rem;max-width:600px;margin-inline:auto;
+}
+.gold-rule{width:60px;height:2px;background:var(--co-amber);margin:1.5rem auto}
+
+/* ── SERVICES ── */
+.services{background:#0f0f18}
+.services-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.03)}
+.svc{
+  background:#0f0f18;
+  padding:2.5rem 2rem;
+  position:relative;overflow:hidden;
+  border-bottom:2px solid transparent;
+  transition:border-color 0.3s,background 0.3s;
+}
+.svc:hover{border-color:var(--co-amber);background:#141420}
+.svc-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:5rem;color:rgba(43,79,160,0.1);
+  position:absolute;top:0.5rem;right:1rem;
+  line-height:1;transition:color 0.3s;
+}
+.svc:hover .svc-n{color:rgba(43,79,160,0.2)}
+.svc-ico{color:var(--co-amber);width:36px;height:36px;margin-bottom:1.2rem}
+.svc h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem;letter-spacing:0.08em;
+  color:var(--white);margin-bottom:0.6rem;
+}
+.svc p{font-family:'Mulish',sans-serif;font-size:0.8rem;font-weight:300;line-height:1.7;color:var(--fog)}
+
+/* ── PHOTO FEATURE ── */
+.photo-feature{
+  background:var(--charcoal);
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:600px;
+}
+.pf-img{overflow:hidden;position:relative}
+.pf-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s}
+.pf-img:hover img{transform:scale(1.03)}
+.pf-img::after{position:absolute;inset:0;background:rgba(17,17,24,0.3);content:''}
+.pf-text{
+  padding:5rem 4rem;
+  background:var(--co-sky);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.pf-text .label{color:var(--co-amber)}
+.pf-text h2{color:var(--white)}
+.pf-text p{
+  font-family:'Mulish',sans-serif;font-size:0.9rem;font-weight:300;
+  line-height:1.8;color:rgba(247,243,236,0.8);
+  margin-top:1.2rem;
+}
+.checklist{list-style:none;margin:1.8rem 0 2rem;display:flex;flex-direction:column;gap:0.8rem}
+.checklist li{
+  font-family:'Mulish',sans-serif;font-size:0.85rem;font-weight:400;
+  color:rgba(247,243,236,0.9);
+  display:flex;align-items:center;gap:0.8rem;
+}
+.checklist li::before{
+  content:'';width:20px;height:20px;flex-shrink:0;
+  border:1.5px solid var(--co-amber);
+  background:rgba(212,160,23,0.15);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 10l4 4 8-8' stroke='%23D4A017' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:center;
+}
+
+/* ── PORTFOLIO GRID ── */
+.portfolio{background:#0a0a12;padding:7rem 8vw}
+.port-grid{
+  margin-top:3rem;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:280px 280px;
+  gap:3px;
+}
+.pc{overflow:hidden;position:relative;cursor:pointer;background:var(--slate)}
+.pc:nth-child(1){grid-column:1/3}
+.pc img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease,filter 0.4s}
+.pc:hover img{transform:scale(1.05);filter:brightness(0.7)}
+.pc-label{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:1.5rem;
+  background:linear-gradient(to top,rgba(17,17,24,0.92) 0%,transparent 60%);
+  transform:translateY(8px);transition:transform 0.3s;
+}
+.pc:hover .pc-label{transform:translateY(0)}
+.pc-label h4{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.1em;color:var(--white)}
+.pc-label span{font-family:'Mulish',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--co-amber);margin-top:3px;display:block}
+
+/* ── ASSESSMENT CARD ── */
+.pm-section{
+  background:var(--charcoal);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+}
+.ac{background:#0f0f18;border:1px solid rgba(43,79,160,0.3);overflow:hidden}
+.ac-head{background:var(--co-sky);padding:1.3rem 1.8rem;display:flex;justify-content:space-between;align-items:center}
+.ac-head h4{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.2em;color:var(--white)}
+.ac-head span{font-family:'Mulish',sans-serif;font-size:0.58rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--co-amber)}
+.ac-body{padding:0 1.8rem}
+.ac-row{padding:1.1rem 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.ac-row:last-child{border-bottom:none}
+.ac-loc{font-family:'Mulish',sans-serif;font-size:0.78rem;font-weight:400;color:rgba(247,243,236,0.75)}
+.ac-loc small{display:block;font-size:0.65rem;color:var(--fog);margin-top:2px}
+.tag{font-family:'Mulish',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.25rem 0.65rem;white-space:nowrap}
+.tag-g{background:rgba(80,190,90,0.12);color:#72D982;border:1px solid rgba(80,190,90,0.2)}
+.tag-y{background:rgba(212,160,23,0.12);color:var(--co-amber);border:1px solid rgba(212,160,23,0.25)}
+.tag-r{background:rgba(200,60,50,0.12);color:#E07060;border:1px solid rgba(200,60,50,0.2)}
+.ac-foot{background:rgba(43,79,160,0.12);border-top:1px solid rgba(43,79,160,0.3);padding:1.2rem 1.8rem;display:flex;justify-content:space-between;align-items:center}
+.ac-foot p{font-family:'Mulish',sans-serif;font-size:0.72rem;color:var(--fog)}
+.ac-foot strong{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--co-amber)}
+.pm-text .label{margin-top:0}
+.pm-text h2{margin-bottom:1rem}
+.pm-text>p{font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;line-height:1.85;color:var(--stone);margin-bottom:1.5rem}
+
+/* ── TIERS ── */
+.tiers-section{background:#0a0a12;padding:5rem 8vw}
+.tiers-head{text-align:center;margin-bottom:3rem}
+.tiers-head p{font-family:'Playfair Display',serif;font-style:italic;color:var(--stone);margin-top:0.8rem;font-size:1rem}
+.tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.04)}
+.tier{background:#0a0a12;padding:2.5rem 2rem;position:relative;overflow:hidden;border-top:3px solid transparent;transition:border-color 0.3s}
+.tier-b{border-color:#9E6B2F}
+.tier-s{border-color:#A8A8B8}
+.tier-g{border-color:var(--co-amber)}
+.tier-ico{font-size:2.2rem;margin-bottom:1rem;display:block}
+.tier h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.1em;margin-bottom:0.5rem}
+.tier-sub{font-family:'Mulish',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--fog);margin-bottom:1.2rem;display:block}
+.tier p{font-family:'Mulish',sans-serif;font-size:0.82rem;font-weight:300;line-height:1.7;color:var(--fog)}
+
+/* ── QUOTE ── */
+.quote-block{
+  background:var(--co-sky);
+  padding:6rem 12vw;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quote-block::before{
+  content:'"';
+  position:absolute;left:5vw;top:-1rem;
+  font-family:'Playfair Display',serif;
+  font-size:18rem;line-height:1;
+  color:rgba(212,160,23,0.08);
+  pointer-events:none;
+}
+.quote-block blockquote{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.2rem,2.2vw,1.75rem);
+  font-style:italic;line-height:1.65;
+  color:var(--white);position:relative;z-index:1;
+  max-width:780px;margin:0 auto 1.5rem;
+}
+.q-by{font-family:'Mulish',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--co-amber)}
+
+/* ── CTA ── */
+.cta-block{
+  background:var(--co-amber);
+  padding:5rem 8vw;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:3rem;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.cta-block::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(-55deg,transparent,transparent 18px,rgba(17,17,24,0.04) 18px,rgba(17,17,24,0.04) 19px);
+}
+.cta-text h2{color:var(--charcoal);font-size:clamp(2rem,4vw,3.5rem);position:relative}
+.cta-text p{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:rgba(17,17,24,0.65);margin-top:0.5rem;position:relative}
+.btn-dark{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:0.1em;
+  color:var(--white);background:var(--charcoal);
+  border:none;cursor:pointer;padding:1.1rem 3rem;
+  transition:background 0.2s,transform 0.15s;
+  text-decoration:none;display:inline-block;
+  white-space:nowrap;position:relative;flex-shrink:0;
+}
+.btn-dark:hover{background:var(--slate);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{background:var(--charcoal);border-top:1px solid rgba(43,79,160,0.2);padding:5rem 8vw 2.5rem}
+.foot-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;margin-bottom:3rem}
+.foot-brand img{height:44px;width:auto;margin-bottom:1rem}
+.foot-brand p{font-family:'Mulish',sans-serif;font-size:0.78rem;font-weight:300;line-height:1.7;color:var(--fog);max-width:260px}
+.foot-col h5{font-family:'Mulish',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--co-amber);margin-bottom:1.2rem}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:0.55rem}
+.foot-col a{font-family:'Mulish',sans-serif;font-size:0.78rem;font-weight:300;color:var(--fog);text-decoration:none;transition:color 0.2s}
+.foot-col a:hover{color:var(--warm)}
+.foot-col address{font-style:normal;font-family:'Mulish',sans-serif;font-size:0.78rem;font-weight:300;line-height:1.8;color:var(--fog)}
+.foot-col address strong{color:var(--stone);font-weight:500;display:block;margin-bottom:4px}
+.foot-col address a{color:var(--co-amber)}
+.foot-bottom{border-top:1px solid rgba(255,255,255,0.04);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.foot-bottom p{font-family:'Mulish',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--fog)}
+.socials{display:flex;gap:0.8rem;margin-top:1rem}
+.soc{width:34px;height:34px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:border-color 0.2s,background 0.2s}
+.soc:hover{border-color:var(--co-amber);background:rgba(212,160,23,0.1)}
+.soc svg{width:14px;height:14px;fill:var(--stone)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.9s,transform 0.9s}
+.reveal.on{opacity:1;transform:none}
+.stagger>*{opacity:0;transform:translateY(20px);transition:opacity 0.6s,transform 0.6s}
+.stagger.on>*:nth-child(1){opacity:1;transform:none;transition-delay:0s}
+.stagger.on>*:nth-child(2){opacity:1;transform:none;transition-delay:0.09s}
+.stagger.on>*:nth-child(3){opacity:1;transform:none;transition-delay:0.18s}
+.stagger.on>*:nth-child(4){opacity:1;transform:none;transition-delay:0.27s}
+.stagger.on>*:nth-child(5){opacity:1;transform:none;transition-delay:0.36s}
+.stagger.on>*:nth-child(6){opacity:1;transform:none;transition-delay:0.45s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .nav-links{display:none}
+  .about,.pm-section,.photo-feature{grid-template-columns:1fr}
+  .photo-feature .pf-img{height:380px}
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .tiers-grid{grid-template-columns:1fr}
+  .foot-inner{grid-template-columns:1fr 1fr}
+  .stats-bar,.stat-bar{grid-template-columns:1fr 1fr}
+  .port-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .pc:nth-child(1){grid-column:1/3}
+  .cta-block{flex-direction:column;text-align:center}
+}
+@media(max-width:600px){
+  .svc-grid,.port-grid{grid-template-columns:1fr}
+  .pc:nth-child(1){grid-column:auto}
+  section{padding:4.5rem 6vw}
+  .photo-strip{grid-template-columns:repeat(3,1fr);height:120px}
+  .photo-strip .strip-img:nth-child(n+4){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-logo"><img src="mpi-logo.avif" alt="MPI A Sunland Company"/></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Our Work</a></li>
+    <li><a href="#pm">Property Managers</a></li>
+    <li><a href="#footer">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('pm').scrollIntoView({behavior:'smooth'})">Free Assessment</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <video autoplay muted loop playsinline>
+    <source src="drone.mp4" type="video/mp4"/>
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-mountains">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 220 L0 160 L80 100 L160 130 L240 60 L320 90 L400 30 L480 70 L540 20 L600 55 L680 10 L740 45 L800 80 L860 35 L920 70 L1000 20 L1080 60 L1160 100 L1240 70 L1320 110 L1440 80 L1440 220 Z" fill="#111118"/>
+      <path d="M0 220 L0 180 L120 140 L200 160 L300 110 L380 130 L460 90 L520 110 L600 80 L680 100 L760 130 L840 100 L920 120 L1000 90 L1100 130 L1200 110 L1300 140 L1440 120 L1440 220 Z" fill="#111118" opacity="0.7"/>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <div class="hero-kicker">MPI · A Sunland Company · Henderson, Colorado</div>
+    <h1>
+      <span>Built for</span>
+      <span class="line-co">Colorado.</span>
+      <span class="line-gold">Built to Last.</span>
+    </h1>
+    <p class="hero-sub">Five decades of Front Range excellence. Backed by the nation's most trusted asphalt enterprise. Now stronger than ever.</p>
+    <div class="hero-btns">
+      <a href="#pm" class="btn-amber">Request a Free Lot Assessment</a>
+      <a href="#work" class="btn-wire">See Our Work</a>
+    </div>
+  </div>
+  <div class="hero-tel">
+    <span>Call Anytime</span>
+    <a href="tel:3034275575">303.427.5575</a>
+  </div>
+</div>
+
+<!-- PHOTO STRIP -->
+<div class="photo-strip">
+  <div class="strip-img"><img src="photo1.jpg" alt="MPI Equipment"/></div>
+  <div class="strip-img"><img src="photo2.jpg" alt="MPI Truck"/></div>
+  <div class="strip-img"><img src="photo3.jpg" alt="Fresh Asphalt"/></div>
+  <div class="strip-img"><img src="photo4.jpg" alt="MPI Paver"/></div>
+  <div class="strip-img"><img src="photo5.jpg" alt="MPI Fleet"/></div>
+  <div class="strip-img"><img src="photo6.jpg" alt="MPI On Site"/></div>
+</div>
+
+<!-- STAT BAR -->
+<div class="stat-bar stagger">
+  <div class="stat-cell"><span class="stat-n" data-target="50">0</span><span class="stat-l">Years on the Front Range</span></div>
+  <div class="stat-cell"><span class="stat-n" data-target="1000" data-suffix="+">0</span><span class="stat-l">Commercial Projects</span></div>
+  <div class="stat-cell"><span class="stat-n">Sunland</span><span class="stat-l">National Backing & Bonding</span></div>
+  <div class="stat-cell"><span class="stat-n">24Hr</span><span class="stat-l">Emergency Response</span></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about reveal" id="about">
+  <div class="about-body">
+    <span class="label">Who We Are</span>
+    <h2>Colorado Roots.<br/>National Strength.</h2>
+    <p>Metro Pavers has been a fixture on the Colorado Front Range since 1975. Five decades of relationships, reputation, and results — built one project at a time.</p>
+    <p>Now operating as MPI, A Sunland Company, we've added something no regional paving contractor in Denver can match: the financial strength, bonding capacity, and operational power of one of the nation's largest asphalt enterprises. What that means for our clients is simple — bigger capacity, better pricing, and a partner who will be here for the next 50 years.</p>
+    <div class="sunland-callout">
+      <h4>Backed by Sunland Asphalt</h4>
+      <p>Sunland is one of the most respected names in commercial paving across the American Southwest and Rocky Mountain region. Our partnership gives MPI clients access to preferred material pricing, expanded bonding on large municipal and commercial contracts, and national-scale resources delivered with local Front Range knowledge.</p>
+    </div>
+  </div>
+  <div class="about-img-wrap">
+    <div class="about-big-img">
+      <img src="photo4.jpg" alt="MPI Paving Equipment at work"/>
+    </div>
+    <div class="about-badge">
+      <span class="bn">A+</span>
+      <span class="bl">Bonding<br/>Rated</span>
+    </div>
+  </div>
+</section>
+
+<!-- PARALLAX DIVIDER -->
+<div class="parallax-section">
+  <div class="parallax-bg" style="background-image:url('photo5.jpg')"></div>
+  <div class="parallax-content reveal">
+    <div class="gold-rule"></div>
+    <h2>Low Bid Picks a Contractor.<br/>Trust Picks a Partner.</h2>
+    <p>We've been earning trust on Colorado job sites since 1975.</p>
+    <div class="gold-rule"></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-top reveal">
+    <div>
+      <span class="label">What We Do</span>
+      <h2>Full-Service Paving<br/>&amp; Concrete Solutions</h2>
+    </div>
+    <a href="#footer" class="btn-wire" style="white-space:nowrap">Get a Quote →</a>
+  </div>
+  <div class="svc-grid stagger">
+    <div class="svc">
+      <span class="svc-n">01</span>
+      <svg class="svc-ico" viewBox="0 0 36 36" fill="none"><path d="M4 28h28M7 28V18l11-7 11 7v10" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="13" y="19" width="10" height="9" stroke="currentColor" stroke-width="1.4"/></svg>
+      <h3>Commercial Asphalt Paving</h3>
+      <p>New lot construction, mill and overlay, and full-depth reclamation for commercial, industrial, and municipal properties of any size across the Front Range.</p>
+    </div>
+    <div class="svc">
+      <span class="svc-n">02</span>
+      <svg class="svc-ico" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="12" stroke="currentColor" stroke-width="1.4"/><path d="M11 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.4"/><path d="M11 18h14" stroke="currentColor" stroke-width="1.4"/><circle cx="18" cy="18" r="2" fill="currentColor"/></svg>
+      <h3>Preventive Maintenance</h3>
+      <p>Proactive sealcoating, crack sealing, and surface treatment programs that extend pavement life by years and eliminate emergency repair costs entirely.</p>
+    </div>
+    <div class="svc">
+      <span class="svc-n">03</span>
+      <svg class="svc-ico" viewBox="0 0 36 36" fill="none"><rect x="4" y="10" width="28" height="18" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 17h28M4 22h28M13 10v18M23 10v18" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/></svg>
+      <h3>Concrete Work</h3>
+      <p>Driveways, sidewalks, curb and gutter, ADA ramps, flow pans, dumpster pads, and stamped or stained decorative concrete for commercial applications.</p>
+    </div>
+    <div class="svc">
+      <span class="svc-n">04</span>
+      <svg class="svc-ico" viewBox="0 0 36 36" fill="none"><path d="M5 29l4-16h18l4 16H5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 13V8M18 13V5M24 13V9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <h3>Pavement Marking &amp; Striping</h3>
+      <p>ADA-compliant parking lot striping, fire lane designation, traffic flow markings, and custom signage that keeps your property safe and legally compliant.</p>
+    </div>
+    <div class="svc">
+      <span class="svc-n">05</span>
+      <svg class="svc-ico" viewBox="0 0 36 36" fill="none"><path d="M7 26c0-6 3.6-11 11-11s11 5 11 11" stroke="currentColor" stroke-width="1.4"/><path d="M3 26h30M12 26v-4M18 26v-7M24 26v-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <h3>Asphalt Repair &amp; Patching</h3>
+      <p>Infrared repair, hot and cold patch, milling, saw cutting, and pothole remediation. We diagnose correctly and fix it once — the right way, the first time.</p>
+    </div>
+    <div class="svc">
+      <span class="svc-n">06</span>
+      <svg class="svc-ico" viewBox="0 0 36 36" fill="none"><path d="M7 17l4-6h14l4 6v10H7V17z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M14 27v-7h8v7M18 11V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M5 21h4M27 21h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <h3>Snow Removal &amp; Ice Control</h3>
+      <p>Seasonal contracts for commercial properties and HOAs. We keep your lots safe, liability-free, and fully operational through every Colorado winter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO FEATURE - For Property Managers -->
+<div class="photo-feature" id="pm">
+  <div class="pf-img">
+    <img src="photo6.jpg" alt="MPI crew at work"/>
+  </div>
+  <div class="pf-text">
+    <span class="label">For Property Managers</span>
+    <h2>We Think Like<br/>You Think.</h2>
+    <p>Budget cycles, deferred maintenance lists, HOA boards, liability exposure. We built our entire approach around the way property managers actually work — not to sell you the biggest job, but to help you plan smarter and protect your asset long-term.</p>
+    <ul class="checklist">
+      <li>Free parking lot condition assessment with written report</li>
+      <li>Multi-property portfolio management & scheduling</li>
+      <li>Seasonal planning tied to your budget cycle</li>
+      <li>1, 3 and 5-year capital expenditure forecasting</li>
+      <li>24-hour emergency response — guaranteed</li>
+      <li>Dedicated account manager, not a call center</li>
+    </ul>
+    <a href="tel:3034275575" class="btn-amber">Schedule Your Free Assessment</a>
+  </div>
+</div>
+
+<!-- PM ASSESSMENT SECTION -->
+<section class="pm-section">
+  <div class="reveal">
+    <span class="label">Sample Report</span>
+    <h2>What a Free<br/>Assessment Looks Like</h2>
+    <p>Every property gets a full written condition report. We walk every square foot, document what we find, and give you a prioritized plan — with cost projections — that fits your budget cycle.</p>
+    <ul class="checklist" style="margin-top:1.5rem">
+      <li>Full surface condition rating by zone</li>
+      <li>ADA compliance check</li>
+      <li>Drainage and ponding assessment</li>
+      <li>5-year maintenance cost projection</li>
+    </ul>
+  </div>
+  <div class="reveal">
+    <div class="ac">
+      <div class="ac-head"><h4>Lot Assessment — Sample Report</h4><span>MPI Colorado</span></div>
+      <div class="ac-body">
+        <div class="ac-row"><div class="ac-loc">Main Entrance Drive<small>12,400 sq ft · Installed 2018</small></div><span class="tag tag-y">Monitor</span></div>
+        <div class="ac-row"><div class="ac-loc">North Parking Field<small>38,200 sq ft · Installed 2014</small></div><span class="tag tag-r">Action Required</span></div>
+        <div class="ac-row"><div class="ac-loc">Loading Dock Apron<small>4,800 sq ft · Resealed 2022</small></div><span class="tag tag-g">Good Condition</span></div>
+        <div class="ac-row"><div class="ac-loc">Perimeter Drive<small>9,600 sq ft · Installed 2016</small></div><span class="tag tag-y">Sealcoat This Season</span></div>
+        <div class="ac-row"><div class="ac-loc">ADA Striping &amp; Ramps<small>Last painted 2019</small></div><span class="tag tag-r">Non-Compliant</span></div>
+      </div>
+      <div class="ac-foot"><p>Estimated 5-year savings vs. reactive maintenance</p><strong>$84,000</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio reveal" id="work">
+  <span class="label">Our Work</span>
+  <h2>Projects That Prove It</h2>
+  <div class="port-grid">
+    <div class="pc">
+      <img src="photo1.jpg" alt="MPI Equipment"/>
+      <div class="pc-label"><h4>Commercial Paving — Henderson</h4><span>Asphalt Overlay · Active Project</span></div>
+    </div>
+    <div class="pc">
+      <img src="photo2.jpg" alt="MPI Fleet"/>
+      <div class="pc-label"><h4>MPI Fleet — Front Range</h4><span>Full-Service Capability</span></div>
+    </div>
+    <div class="pc">
+      <img src="photo3.jpg" alt="Fresh Asphalt Detail"/>
+      <div class="pc-label"><h4>Fresh Overlay — Commerce City</h4><span>Precision Asphalt Work</span></div>
+    </div>
+    <div class="pc">
+      <img src="photo5.jpg" alt="MPI Mack Truck"/>
+      <div class="pc-label"><h4>Municipal Street Project</h4><span>City Contract · 1.2 Miles</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAINTENANCE TIERS -->
+<div class="tiers-section">
+  <div class="tiers-head reveal">
+    <span class="label" style="display:block;text-align:center">Parking Lot Maintenance Programs</span>
+    <h2>A Plan for Every Property</h2>
+    <p>Structured maintenance contracts built around your budget — not ours.</p>
+  </div>
+  <div class="tiers-grid stagger">
+    <div class="tier tier-b">
+      <span class="tier-ico">🥉</span>
+      <h3>Bronze — Essential</h3>
+      <span class="tier-sub">Protect Your Asset</span>
+      <p>Annual crack seal inspection plus scheduled sealcoating. Keeps water out, extends pavement life, and prevents small problems from becoming big ones. The smart starting point for any commercial property.</p>
+    </div>
+    <div class="tier tier-s">
+      <span class="tier-ico">🥈</span>
+      <h3>Silver — Proactive</h3>
+      <span class="tier-sub">Extend &amp; Protect</span>
+      <p>Everything in Bronze, plus an annual condition assessment, priority scheduling, and a patching allowance. The most popular tier for mid-size commercial and HOA properties across the Front Range.</p>
+    </div>
+    <div class="tier tier-g">
+      <span class="tier-ico">🥇</span>
+      <h3>Gold — Comprehensive</h3>
+      <span class="tier-sub">Total Peace of Mind</span>
+      <p>Full managed maintenance — condition reports, 5-year capital planning, striping refresh, and guaranteed emergency response priority. Built for property managers overseeing multiple assets or large portfolios.</p>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-block reveal">
+  <blockquote>"MPI didn't just repave our parking lot — they walked every inch of the property with us, explained exactly what we needed versus what could wait, and delivered on every promise. Our HOA board was stunned at how professional the entire process was from start to finish."</blockquote>
+  <div class="q-by">Property Manager · Denver Metro HOA · 340 Units</div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block reveal">
+  <div class="cta-text">
+    <h2>Ready to Protect<br/>Your Pavement?</h2>
+    <p>Schedule a free, no-obligation parking lot assessment today.</p>
+  </div>
+  <a href="tel:3034275575" class="btn-dark">Call 303.427.5575 or Schedule Online →</a>
+</div>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <img src="mpi-logo.avif" alt="MPI A Sunland Company"/>
+      <p>Colorado's commercial paving partner since 1975. Backed by the national strength of Sunland Asphalt. Locally rooted. Fully resourced. Built to last.</p>
+      <div class="socials">
+        <a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" class="soc"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#">Asphalt Paving</a></li>
+        <li><a href="#">Concrete Work</a></li>
+        <li><a href="#">Preventive Maintenance</a></li>
+        <li><a href="#">Pavement Marking</a></li>
+        <li><a href="#">Asphalt Repair</a></li>
+        <li><a href="#">Snow Removal</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About MPI</a></li>
+        <li><a href="#">Our Work</a></li>
+        <li><a href="#">For Property Managers</a></li>
+        <li><a href="#">Maintenance Programs</a></li>
+        <li><a href="https://www.sunlandasphalt.com" target="_blank">Sunland Asphalt</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Contact</h5>
+      <address>
+        <strong>MPI Colorado — Henderson</strong>
+        7875 I-76 Frontage Road<br/>
+        Henderson, CO 80640<br/><br/>
+        <a href="tel:3034275575">303.427.5575</a><br/>
+        Fax: 303.427.1039
+      </address>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2026 MPI, A Sunland Company. All rights reserved.</p>
+    <p>Denver Metro · Colorado Springs · Commerce City · Front Range Colorado</p>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
+
+// Reveal on scroll
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')})},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal,.stagger').forEach(el=>io.observe(el));
+
+// Counter
+const co=new IntersectionObserver(e=>{
+  e.forEach(x=>{
+    if(!x.isIntersecting)return;
+    const el=x.target,t=parseInt(el.dataset.target||0),s=el.dataset.suffix||'';
+    if(!t){co.unobserve(el);return}
+    let t0=null;
+    const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1800,1),ease=1-Math.pow(1-p,4);el.textContent=Math.round(ease*t).toLocaleString()+s;if(p<1)requestAnimationFrame(step)};
+    requestAnimationFrame(step);co.unobserve(el);
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}});
+});
+</script>
+</body>
+</html>
